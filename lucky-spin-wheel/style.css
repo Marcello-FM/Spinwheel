@@ -1,0 +1,580 @@
+/* ================================================
+   Lucky Spin Wheel — Premium Styles
+   Dark mode with gold accents & glassmorphism
+   ================================================ */
+
+/* ---- CSS Custom Properties ---- */
+:root {
+    --bg-dark: #070b1a;
+    --bg-darker: #050815;
+    --bg-card: rgba(12, 18, 48, 0.85);
+    --gold: #d4af37;
+    --gold-light: #f0d060;
+    --gold-dark: #9c7c1c;
+    --blue-deep: #0a1628;
+    --blue-dark: #0f1f3c;
+    --blue-accent: #1e3a5f;
+    --white: #ffffff;
+    --white-soft: #e8ecf4;
+    --text-muted: #8892a8;
+    --shadow-gold: rgba(212, 175, 55, 0.35);
+    --shadow-dark: rgba(0, 0, 0, 0.55);
+    --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ---- Reset & Base ---- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    font-family: var(--font-main);
+    background: linear-gradient(145deg, var(--bg-dark) 0%, #0d1330 50%, var(--bg-darker) 100%);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* ---- Particle Background ---- */
+#particles-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* ---- Main Container ---- */
+.main-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem 1rem;
+    gap: 0.5rem;
+}
+
+/* ---- Header ---- */
+.header {
+    text-align: center;
+    margin-bottom: 1rem;
+    animation: fadeInDown 0.8s var(--ease-smooth) both;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.header-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-weight: 700;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    padding: 0.4rem 1.4rem;
+    border-radius: 50px;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.25);
+}
+
+.title {
+    font-size: clamp(2.4rem, 6vw, 4rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin-bottom: 0.75rem;
+}
+
+.title-lucky {
+    display: block;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold), var(--gold-dark));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 8px var(--shadow-gold));
+}
+
+.title-spin {
+    display: block;
+    color: var(--white);
+    text-shadow: 0 0 50px rgba(255, 255, 255, 0.12);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+}
+
+/* ---- Wheel Section ---- */
+.wheel-section {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInUp 0.8s 0.2s var(--ease-smooth) both;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Pulsing glow behind the wheel */
+.wheel-glow {
+    position: absolute;
+    width: 540px;
+    height: 540px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.04) 40%, transparent 70%);
+    animation: pulseGlow 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    50% {
+        transform: scale(1.08);
+        opacity: 1;
+    }
+}
+
+/* Wheel wrapper (relative container for pointer, canvas, button) */
+.wheel-wrapper {
+    position: relative;
+    width: 480px;
+    height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#wheel-canvas {
+    width: 100%;
+    height: 100%;
+    /* No CSS transition — JS handles rotation via requestAnimationFrame */
+}
+
+/* ---- Pointer (fixed at top, does NOT rotate) ---- */
+.pointer {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    filter: drop-shadow(0 4px 18px rgba(212, 175, 55, 0.65));
+    transition: transform 0.15s var(--ease-smooth);
+}
+
+.pointer.bounce {
+    animation: pointerBounce 0.4s ease-out;
+}
+
+@keyframes pointerBounce {
+    0%   { transform: translateX(-50%) translateY(0); }
+    30%  { transform: translateX(-50%) translateY(6px); }
+    60%  { transform: translateX(-50%) translateY(-2px); }
+    100% { transform: translateX(-50%) translateY(0); }
+}
+
+.pointer-arrow {
+    width: 0;
+    height: 0;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 38px solid var(--gold);
+    position: relative;
+}
+
+/* Inner highlight on pointer */
+.pointer-arrow::after {
+    content: '';
+    position: absolute;
+    top: -38px;
+    left: -13px;
+    width: 0;
+    height: 0;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    border-top: 30px solid var(--gold-light);
+}
+
+.pointer-dot {
+    width: 12px;
+    height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-top: -3px;
+    box-shadow: 0 0 12px var(--shadow-gold);
+}
+
+/* ---- Spin Button (centered, does NOT rotate) ---- */
+.spin-btn {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    border: 3px solid var(--gold-light);
+    background: linear-gradient(150deg, #1a2555, #0d1535);
+    cursor: pointer;
+    transition: all 0.3s var(--ease-smooth);
+    box-shadow:
+        0 0 22px rgba(212, 175, 55, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.08),
+        0 4px 18px var(--shadow-dark);
+    animation: btnPulse 2s ease-in-out infinite;
+    outline: none;
+}
+
+.spin-btn:hover:not(:disabled) {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow:
+        0 0 40px rgba(212, 175, 55, 0.5),
+        inset 0 2px 4px rgba(255, 255, 255, 0.12),
+        0 8px 25px var(--shadow-dark);
+}
+
+.spin-btn:active:not(:disabled) {
+    transform: translate(-50%, -50%) scale(0.94);
+}
+
+.spin-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    animation: none;
+}
+
+.spin-btn-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    pointer-events: none;
+}
+
+.spin-icon {
+    font-size: 1.15rem;
+    color: var(--gold-light);
+    line-height: 1;
+}
+
+.spin-text {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--gold-light);
+}
+
+@keyframes btnPulse {
+    0%, 100% {
+        box-shadow:
+            0 0 22px rgba(212, 175, 55, 0.3),
+            inset 0 2px 4px rgba(255, 255, 255, 0.08);
+    }
+    50% {
+        box-shadow:
+            0 0 38px rgba(212, 175, 55, 0.55),
+            inset 0 2px 4px rgba(255, 255, 255, 0.12);
+    }
+}
+
+/* ---- Modal Overlay ---- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 8, 21, 0.88);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s var(--ease-smooth);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    position: relative;
+    background: linear-gradient(150deg, rgba(15, 25, 60, 0.96), rgba(10, 15, 40, 0.98));
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 24px;
+    padding: 3rem 2.5rem 2.5rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    transform: scale(0.75) translateY(30px);
+    transition: transform 0.45s var(--ease-smooth);
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(212, 175, 55, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.modal-overlay.active .modal {
+    transform: scale(1) translateY(0);
+}
+
+/* Win variant — golden glow */
+.modal.win {
+    border-color: rgba(212, 175, 55, 0.45);
+    box-shadow:
+        0 30px 70px rgba(0, 0, 0, 0.6),
+        0 0 70px rgba(212, 175, 55, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.modal-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 1.2rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 1.75rem;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.2s;
+    line-height: 1;
+    padding: 0.25rem;
+}
+
+.modal-close:hover {
+    color: var(--white);
+    transform: scale(1.15);
+}
+
+.modal-emoji {
+    font-size: 4.2rem;
+    margin-bottom: 0.8rem;
+    animation: emojiPop 0.5s var(--ease-smooth) both;
+}
+
+@keyframes emojiPop {
+    0% {
+        transform: scale(0) rotate(-15deg);
+        opacity: 0;
+    }
+    60% {
+        transform: scale(1.25) rotate(5deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+.modal-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    color: var(--white);
+}
+
+.modal-title.win {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.modal-message {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.modal-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+    color: var(--bg-dark);
+    font-family: var(--font-main);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 0.85rem 2.8rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s var(--ease-smooth);
+    box-shadow: 0 4px 18px rgba(212, 175, 55, 0.3);
+}
+
+.modal-btn:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
+}
+
+.modal-btn:active {
+    transform: translateY(0) scale(0.97);
+}
+
+/* ---- Confetti Canvas ---- */
+#confetti-canvas {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    pointer-events: none;
+}
+
+/* ---- Footer ---- */
+.footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    opacity: 0.4;
+    animation: fadeInUp 0.8s 0.5s var(--ease-smooth) both;
+}
+
+/* ================================================
+   Responsive Breakpoints
+   ================================================ */
+@media (max-width: 600px) {
+    .main-container {
+        padding: 1.5rem 0.75rem;
+    }
+
+    .wheel-wrapper {
+        width: 86vw;
+        height: 86vw;
+        max-width: 420px;
+        max-height: 420px;
+    }
+
+    .wheel-glow {
+        width: 92vw;
+        height: 92vw;
+        max-width: 460px;
+        max-height: 460px;
+    }
+
+    .spin-btn {
+        width: 72px;
+        height: 72px;
+    }
+
+    .spin-text {
+        font-size: 0.85rem;
+        letter-spacing: 1.5px;
+    }
+
+    .spin-icon {
+        font-size: 1rem;
+    }
+
+    .header {
+        margin-bottom: 0.8rem;
+    }
+
+    .modal {
+        padding: 2.2rem 1.5rem 1.8rem;
+        border-radius: 20px;
+    }
+
+    .modal-emoji {
+        font-size: 3.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .wheel-wrapper {
+        width: 92vw;
+        height: 92vw;
+    }
+
+    .spin-btn {
+        width: 62px;
+        height: 62px;
+    }
+
+    .spin-text {
+        font-size: 0.75rem;
+    }
+
+    .spin-icon {
+        font-size: 0.9rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+}
+
+@media (min-width: 1200px) {
+    .wheel-wrapper {
+        width: 520px;
+        height: 520px;
+    }
+
+    .wheel-glow {
+        width: 580px;
+        height: 580px;
+    }
+
+    .spin-btn {
+        width: 100px;
+        height: 100px;
+    }
+
+    .spin-text {
+        font-size: 1.1rem;
+    }
+
+    .spin-icon {
+        font-size: 1.3rem;
+    }
+}
