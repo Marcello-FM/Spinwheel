@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Algonova Roulette — Putar roda keberuntungan dan menangkan hadiah menarik! Game roulette modern dengan tampilan premium dari Algonova.">
+    <meta name="theme-color" content="#070b1a">
+    <title>Algonova Roulette — Putar &amp; Menangkan!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Animated Particle Background -->
+    <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-badge">✨ ALGONOVA PRESENTS</div>
+            <h1 class="title">
+                <span class="title-lucky">Algonova</span>
+                <span class="title-spin">Roulette</span>
+            </h1>
+            <p class="subtitle">Putar roda dan menangkan hadiah menarik!</p>
+        </header>
+
+        <!-- Wheel Section -->
+        <section class="wheel-section" aria-label="Roda Keberuntungan">
+            <div class="wheel-glow" aria-hidden="true"></div>
+            <div class="wheel-wrapper" id="wheel-wrapper">
+                <!-- Pointer Arrow (fixed, does not rotate) -->
+                <div class="pointer" id="pointer" aria-hidden="true">
+                    <div class="pointer-arrow"></div>
+                    <div class="pointer-dot"></div>
+                </div>
+                <!-- Wheel Canvas (rotates via JS transform) -->
+                <canvas id="wheel-canvas" aria-label="Roda keberuntungan dengan 9 sektor hadiah"></canvas>
+                <!-- Center Spin Button (does not rotate) -->
+                <button class="spin-btn" id="spin-btn" aria-label="Putar roda">
+                    <span class="spin-btn-inner">
+                        <span class="spin-icon">&#9733;</span>
+                        <span class="spin-text">SPIN</span>
+                    </span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2026 Algonova Roulette &bull; All rights reserved</p>
+        </footer>
+    </main>
+
+    <!-- Result Modal Overlay -->
+    <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div class="modal" id="modal">
+            <button class="modal-close" id="modal-close" aria-label="Tutup">&times;</button>
+            <div class="modal-content">
+                <div class="modal-emoji" id="modal-emoji"></div>
+                <h2 class="modal-title" id="modal-title"></h2>
+                <p class="modal-message" id="modal-message"></p>
+                <button class="modal-btn" id="modal-btn">Spin Lagi!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confetti Canvas (above everything except modal) -->
+    <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+    <script src="script.js"></script>
+</body>
+</html>
